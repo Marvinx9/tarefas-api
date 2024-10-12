@@ -1,16 +1,18 @@
 import { JwtService } from '@nestjs/jwt';
-import { SignInDto } from './dto/signIn.dto';
-import { UnauthorizedException } from '@nestjs/common';
+import { LoginDto } from './dto/login.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
-import { UserPrismaRepository } from '../users/repositories/prisma/user.prisma.repository';
+import { IUserRepository } from '../users/repositories/user.repository';
+import { LoginOutputDto } from './dto/loginOutputDto';
 
-export class SignInService {
+@Injectable()
+export class LoginService {
   constructor(
     private jwtService: JwtService,
-    private userRepository: UserPrismaRepository,
+    private userRepository: IUserRepository,
   ) {}
 
-  async execute(data: SignInDto) {
+  async execute(data: LoginDto): Promise<LoginOutputDto> {
     const user = await this.userRepository.findByUsername(data.username);
 
     if (!user) {
@@ -26,12 +28,15 @@ export class SignInService {
     const payload = {
       sub: user.id,
       username: user.username,
+      id: user.id,
     };
 
     const token = await this.jwtService.signAsync(payload);
 
     return {
       access_token: token,
+      id: user.id,
+      username: user.username,
     };
   }
 }

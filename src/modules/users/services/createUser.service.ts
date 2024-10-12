@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
-import { CreateUserInputDto } from './dto/createUserInput.dto';
-import { IUserRepository } from './repositories/user.repository';
+import { CreateUserInputDto } from '../dto/createUserInput.dto';
+import { IUserRepository } from '../repositories/user.repository';
 
 @Injectable()
 export class CreateUserService {

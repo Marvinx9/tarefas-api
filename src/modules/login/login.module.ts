@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaService } from 'src/infra/database/prisma.service';
-import { SignInService } from './signIn.service';
+import { LoginService } from './login.service';
 import { LoginController } from './login.controller';
 import { IUserRepository } from '../users/repositories/user.repository';
 import { UserPrismaRepository } from '../users/repositories/prisma/user.prisma.repository';
@@ -17,7 +17,7 @@ import { UserPrismaRepository } from '../users/repositories/prisma/user.prisma.r
   controllers: [LoginController],
   providers: [
     PrismaService,
-    SignInService,
+    LoginService,
     {
       provide: IUserRepository,
       useClass: UserPrismaRepository,

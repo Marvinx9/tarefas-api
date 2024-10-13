@@ -1,0 +1,15 @@
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { CreateTaskUserService } from './services/createTaskUser.service';
+import { AuthGuard } from 'src/infra/providers/auth-guard-provider';
+import { TaskUserRequestDto } from './dto/createTaskUser.dto';
+
+@Controller('/tasks')
+export class TaskUserController {
+  constructor(private createTaskUserService: CreateTaskUserService) {}
+
+  @UseGuards(AuthGuard)
+  @Post('/')
+  async create(@Body() data: TaskUserRequestDto, @Request() req) {
+    data.id = String(req.user.id);
+  }
+}

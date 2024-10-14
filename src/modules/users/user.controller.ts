@@ -3,8 +3,11 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { CreateUserService } from './services/createUser.service';
@@ -12,14 +15,25 @@ import { CreateUserInputDto } from './dto/createUserInput.dto';
 import { CreateUserValidationPipe } from './pipe/createUserValidation.pipe';
 import { ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from 'src/infra/providers/auth-guard-provider';
-import { ProfileUserUseCase } from './services/profileUser.service';
+import { ProfileUserService } from './services/profileUser.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AvatarDto, FileDto } from './dto/createUserData.dto';
+import { UploadAvatarUserService } from './services/uploadAvatarUser.service';
 
 @Controller('/users')
 export class UserController {
   constructor(
     private readonly createUserService: CreateUserService,
-    private readonly profileUserUseCase: ProfileUserUseCase,
+    private readonly profileUserService: ProfileUserService,
+    private readonly uploadAvatarUserService: UploadAvatarUserService,
   ) {}
+
+  @Get('/profile')
+  @UseGuards(AuthGuard)
+  async profile(@Request() req) {
+    const id = String(req.user.id);
+    return await this.profileUserService.execute(id);
+  }
 
   @Post()
   @ApiCreatedResponse()
@@ -29,10 +43,14 @@ export class UserController {
     return await this.createUserService.execute(data);
   }
 
-  @Get('/profile')
+  @Put('/avatar')
   @UseGuards(AuthGuard)
-  async profile(@Request() req) {
-    const id = String(req.user.id);
-    return await this.profileUserUseCase.execute(id);
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadAvatar(@Request() req, @UploadedFile() file: FileDto) {
+    const data: AvatarDto = {
+      idUser: String(req.user.id),
+      file: file,
+    };
+    return await this.uploadAvatarUserService.execute(data);
   }
 }

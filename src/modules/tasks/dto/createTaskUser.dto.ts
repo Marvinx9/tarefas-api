@@ -1,18 +1,8 @@
 import { Type } from '@nestjs/class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDate,
-  IsIn,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsIn, IsNotEmpty, IsString } from 'class-validator';
 
 export class TaskUserRequestDto {
-  @IsOptional()
-  @IsString()
-  id: string;
-
   @IsNotEmpty()
   @IsString()
   userId: string;

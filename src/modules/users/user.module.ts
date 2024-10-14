@@ -4,17 +4,25 @@ import { CreateUserService } from './services/createUser.service';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { IUserRepository } from './repositories/user.repository';
 import { UserPrismaRepository } from './repositories/prisma/user.prisma.repository';
-import { ProfileUserUseCase } from './services/profileUser.service';
+import { ProfileUserService } from './services/profileUser.service';
+import { UploadAvatarUserService } from './services/uploadAvatarUser.service';
+import { IStorage } from 'src/infra/providers/storage/storage';
+import { SupabaseStorage } from 'src/infra/providers/storage/supabase.storage';
 @Module({
   imports: [],
   controllers: [UserController],
   providers: [
     CreateUserService,
     PrismaService,
-    ProfileUserUseCase,
+    ProfileUserService,
+    UploadAvatarUserService,
     {
       provide: IUserRepository,
       useClass: UserPrismaRepository,
+    },
+    {
+      provide: IStorage,
+      useClass: SupabaseStorage,
     },
   ],
 })

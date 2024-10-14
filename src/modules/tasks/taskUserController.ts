@@ -10,6 +10,7 @@ export class TaskUserController {
   @UseGuards(AuthGuard)
   @Post('/')
   async create(@Body() data: TaskUserRequestDto, @Request() req) {
-    data.id = String(req.user.id);
+    data.userId = String(req.user.id);
+    return await this.createTaskUserService.execute(data);
   }
 }

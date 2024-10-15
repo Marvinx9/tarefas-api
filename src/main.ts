@@ -7,6 +7,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Tarefas-api')
     .setDescription('The Tarefas-api description')
+    .setVersion('1.0')
     .addTag('Modules')
     .addBearerAuth(
       {

@@ -13,7 +13,11 @@ import {
 import { CreateUserService } from './services/createUser.service';
 import { CreateUserInputDto } from './dto/createUserInput.dto';
 import { CreateUserValidationPipe } from './pipe/createUserValidation.pipe';
-import { ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from 'src/infra/providers/auth-guard-provider';
 import { ProfileUserService } from './services/profileUser.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -21,6 +25,7 @@ import { AvatarDto, FileDto } from './dto/createUserData.dto';
 import { UploadAvatarUserService } from './services/uploadAvatarUser.service';
 
 @Controller('/users')
+@ApiTags('Users')
 export class UserController {
   constructor(
     private readonly createUserService: CreateUserService,

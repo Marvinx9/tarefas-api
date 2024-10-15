@@ -39,3 +39,28 @@ export class TaskUserRequestDto {
   @IsNotEmpty()
   status: string;
 }
+
+type TaskDto = {
+  startAt: Date;
+  endAt: Date;
+  title: string;
+  description: string;
+};
+
+type UserDto = {
+  id: string;
+  username: string;
+  email: string;
+  name: string;
+  avatarUrl: string | null;
+  createdAt: Date;
+};
+
+export type TaskUserNotificationDto = {
+  id: string;
+  taskId: string;
+  userId: string;
+  createdAt: Date;
+  task: TaskDto;
+  user: UserDto;
+};

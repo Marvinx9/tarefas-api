@@ -14,7 +14,7 @@ export class TaskUserPrismaRepository implements ITaskUserRepository {
   async findAllStartDay(): Promise<TaskUserNotificationDto[] | null> {
     const allTasks = await this.prismaService.taskUser.findMany({
       where: {
-        and: [
+        AND: [
           {
             task: {
               startAt: {
@@ -37,6 +37,7 @@ export class TaskUserPrismaRepository implements ITaskUserRepository {
         user: true,
       },
     });
+
     return allTasks;
   }
 

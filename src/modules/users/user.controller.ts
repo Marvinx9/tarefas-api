@@ -15,13 +15,21 @@ import { CreateUserInputDto } from './dto/createUserInput.dto';
 import { CreateUserValidationPipe } from './pipe/createUserValidation.pipe';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/infra/providers/auth-guard-provider';
 import { ProfileUserService } from './services/profileUser.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AvatarDto, FileDto } from './dto/createUserData.dto';
+import {
+  AvatarDto,
+  createUserDataDto,
+  FileDto,
+} from './dto/createUserData.dto';
 import { UploadAvatarUserService } from './services/uploadAvatarUser.service';
 
 @Controller('/users')
@@ -34,8 +42,10 @@ export class UserController {
   ) {}
 
   @Get('/profile')
+  @ApiBearerAuth()
+  @ApiOkResponse()
   @UseGuards(AuthGuard)
-  async profile(@Request() req) {
+  async profile(@Request() req): Promise<createUserDataDto | null> {
     const id = String(req.user.id);
     return await this.profileUserService.execute(id);
   }
@@ -51,6 +61,19 @@ export class UserController {
   @Put('/avatar')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   async uploadAvatar(@Request() req, @UploadedFile() file: FileDto) {
     const data: AvatarDto = {
       idUser: String(req.user.id),

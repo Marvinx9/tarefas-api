@@ -4,11 +4,13 @@ import { LoginDto } from './dto/login.dto';
 import {
   ApiOkResponse,
   ApiResponse,
+  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { LoginOutputDto } from './dto/loginOutputDto';
 
 @Controller('login')
+@ApiTags('Login')
 @ApiResponse({ type: LoginOutputDto })
 @ApiOkResponse()
 export class LoginController {
